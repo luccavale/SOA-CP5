@@ -7,7 +7,7 @@ API REST simples para gerenciamento de pedidos de um e-commerce: **criar pedido*
 | Nome | RM |
 |------|----|
 | Danilo Luz Rios | RM554791 |
-| Lucca Natario do Vale| RM95688 |
+| Lucca Natario do Vale | RM95688 |
 | Thiago Feltrin Geraldes | RM555805 |
 
 ## Tecnologias
@@ -285,5 +285,3 @@ Logs gerados pela API durante as requisições de exemplo acima, registrados em 
 ```
 
 Repare que o `requestId` `f4b00883-...` do primeiro log é o mesmo do header `x-request-id` da resposta do `POST` mostrada na seção de exemplos.
-#   S O A - C P 5  
- 
