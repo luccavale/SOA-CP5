@@ -1,0 +1,288 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "API de Pedidos",
+    "description": "API REST simples para gerenciamento de pedidos de um e-commerce (CP5 - Arquitetura Orientada a Serviço - FIAP).\n\nTodas as respostas trazem o header `X-Request-ID`. O cliente pode enviar o próprio `X-Request-ID`; caso contrário, a API gera um UUID.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Execução local"
+    }
+  ],
+  "paths": {
+    "/pedidos": {
+      "post": {
+        "tags": [
+          "Pedidos"
+        ],
+        "summary": "Criar pedido",
+        "description": "Cria um novo pedido. O identificador (UUID), o status inicial (`CRIADO`) e a data de criação são definidos pelo servidor.",
+        "operationId": "criarPedido",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PedidoEntrada"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Pedido criado com sucesso",
+            "headers": {
+              "Location": {
+                "description": "URL do pedido criado",
+                "schema": {
+                  "type": "string",
+                  "example": "/pedidos/3f2b8c1e-7a4d-4e1b-9c2a-5d6e7f8a9b0c"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PedidoResposta"
+                },
+                "example": {
+                  "id": "3f2b8c1e-7a4d-4e1b-9c2a-5d6e7f8a9b0c",
+                  "cliente": "Maria Silva",
+                  "descricao": "1x Notebook Dell Inspiron 15",
+                  "valor": 4599.9,
+                  "status": "CRIADO",
+                  "criadoEm": "2026-10-21T22:15:03.512Z"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Corpo da requisição inválido (campo ausente, vazio ou valor menor/igual a zero)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                },
+                "example": {
+                  "erro": "REQUISICAO_INVALIDA",
+                  "mensagem": "Dados de entrada inválidos",
+                  "requestId": "c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f",
+                  "detalhes": [
+                    {
+                      "campo": "valor",
+                      "mensagem": "Input should be greater than 0"
+                    },
+                    {
+                      "campo": "cliente",
+                      "mensagem": "Field required"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pedidos/{pedido_id}": {
+      "get": {
+        "tags": [
+          "Pedidos"
+        ],
+        "summary": "Consultar pedido por identificador",
+        "operationId": "consultarPedido",
+        "parameters": [
+          {
+            "name": "pedido_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Identificador único do pedido (UUID retornado na criação)",
+              "title": "Pedido Id"
+            },
+            "description": "Identificador único do pedido (UUID retornado na criação)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pedido encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PedidoResposta"
+                },
+                "example": {
+                  "id": "3f2b8c1e-7a4d-4e1b-9c2a-5d6e7f8a9b0c",
+                  "cliente": "Maria Silva",
+                  "descricao": "1x Notebook Dell Inspiron 15",
+                  "valor": 4599.9,
+                  "status": "CRIADO",
+                  "criadoEm": "2026-10-21T22:15:03.512Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não existe pedido com o identificador informado",
+            "content": {
+              "application/json": {
+                "example": {
+                  "erro": "PEDIDO_NAO_ENCONTRADO",
+                  "mensagem": "Pedido '00000000-0000-0000-0000-000000000000' não encontrado",
+                  "requestId": "b7e9a1d2-4c3f-4a8e-9f10-2d3c4b5a6e7f"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErroResposta": {
+        "properties": {
+          "erro": {
+            "type": "string",
+            "title": "Erro",
+            "description": "Código do erro"
+          },
+          "mensagem": {
+            "type": "string",
+            "title": "Mensagem",
+            "description": "Descrição legível do erro"
+          },
+          "requestId": {
+            "type": "string",
+            "title": "Requestid",
+            "description": "Identificador da requisição (também enviado no header X-Request-ID)"
+          },
+          "detalhes": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detalhes",
+            "description": "Detalhes de validação, quando houver"
+          }
+        },
+        "type": "object",
+        "required": [
+          "erro",
+          "mensagem",
+          "requestId"
+        ],
+        "title": "ErroResposta"
+      },
+      "PedidoEntrada": {
+        "properties": {
+          "cliente": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Cliente",
+            "description": "Nome ou identificação do cliente"
+          },
+          "descricao": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Descricao",
+            "description": "Descrição do pedido"
+          },
+          "valor": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Valor",
+            "description": "Valor total do pedido (maior que zero)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cliente",
+          "descricao",
+          "valor"
+        ],
+        "title": "PedidoEntrada",
+        "examples": [
+          {
+            "cliente": "Maria Silva",
+            "descricao": "1x Notebook Dell Inspiron 15",
+            "valor": 4599.9
+          }
+        ]
+      },
+      "PedidoResposta": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Identificador único do pedido (UUID)"
+          },
+          "cliente": {
+            "type": "string",
+            "title": "Cliente"
+          },
+          "descricao": {
+            "type": "string",
+            "title": "Descricao"
+          },
+          "valor": {
+            "type": "number",
+            "title": "Valor"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusPedido"
+          },
+          "criadoEm": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Criadoem",
+            "description": "Data/hora de criação (UTC)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "cliente",
+          "descricao",
+          "valor",
+          "status",
+          "criadoEm"
+        ],
+        "title": "PedidoResposta",
+        "examples": [
+          {
+            "cliente": "Maria Silva",
+            "criadoEm": "2026-10-21T22:15:03.512Z",
+            "descricao": "1x Notebook Dell Inspiron 15",
+            "id": "3f2b8c1e-7a4d-4e1b-9c2a-5d6e7f8a9b0c",
+            "status": "CRIADO",
+            "valor": 4599.9
+          }
+        ]
+      },
+      "StatusPedido": {
+        "type": "string",
+        "enum": [
+          "CRIADO"
+        ],
+        "title": "StatusPedido"
+      }
+    }
+  }
+}

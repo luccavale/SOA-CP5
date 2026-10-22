@@ -1,0 +1,20 @@
+flowchart LR
+    CLI["Cliente HTTP<br/>(curl, Swagger UI, testes)"]
+
+    subgraph API["API de Pedidos - FastAPI"]
+        direction LR
+        MW["Middleware de requisição<br/>app/main.py<br/>gera requestId + log da requisição"]
+        HTTP["Camada HTTP / Rotas<br/>app/api.py + app/schemas.py<br/>POST /pedidos<br/>GET /pedidos/{pedido_id}"]
+        SVC["Camada de negócio<br/>app/service.py<br/>PedidoService"]
+        REPO["Camada de armazenamento<br/>app/repository.py<br/>PedidoRepository"]
+        MEM[("Estrutura em memória<br/>dict: id → Pedido")]
+        LOG["Logs estruturados JSON<br/>app/logging_config.py<br/>saída: stdout"]
+    end
+
+    CLI <-->|"requisição / resposta JSON"| MW
+    MW --> HTTP
+    HTTP -->|"dados validados"| SVC
+    SVC -->|"salvar / buscar_por_id"| REPO
+    REPO --> MEM
+    MW -.->|"HTTP_REQUEST"| LOG
+    SVC -.->|"CRIAR_PEDIDO / CONSULTAR_PEDIDO"| LOG

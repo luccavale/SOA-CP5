@@ -1,0 +1,14 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.16, pytest-9.1.1, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/claude/pedidos-api
+plugins: platformdirs-4.12.3, anyio-4.15.1
+collecting ... collected 5 items
+
+tests/test_pedidos.py::test_criar_pedido_retorna_201_com_status_criado PASSED [ 20%]
+tests/test_pedidos.py::test_consultar_pedido_existente_retorna_200 PASSED [ 40%]
+tests/test_pedidos.py::test_consultar_pedido_inexistente_retorna_404 PASSED [ 60%]
+tests/test_pedidos.py::test_criar_pedido_com_valor_invalido_retorna_422 PASSED [ 80%]
+tests/test_pedidos.py::test_criar_pedido_gera_log_estruturado_em_json PASSED [100%]
+
+============================== 5 passed in 0.06s ===============================

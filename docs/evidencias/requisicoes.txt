@@ -1,0 +1,40 @@
+$ curl -i -X POST http://localhost:8000/pedidos -H "Content-Type: application/json" -d '{"cliente":"Maria Silva","descricao":"1x Notebook Dell Inspiron 15","valor":4599.90}'
+HTTP/1.1 201 Created
+date: Thu, 22 Oct 2026 00:37:01 GMT
+server: uvicorn
+content-length: 186
+content-type: application/json
+location: /pedidos/35f1082e-38f9-4c8c-9e94-59330c43619b
+x-request-id: f4b00883-7376-46d8-a08c-4df20a11643f
+
+{"id":"35f1082e-38f9-4c8c-9e94-59330c43619b","cliente":"Maria Silva","descricao":"1x Notebook Dell Inspiron 15","valor":4599.9,"status":"CRIADO","criadoEm":"2026-10-22T00:37:01.740948Z"}
+
+$ curl -i http://localhost:8000/pedidos/35f1082e-38f9-4c8c-9e94-59330c43619b
+HTTP/1.1 200 OK
+date: Thu, 22 Oct 2026 00:37:01 GMT
+server: uvicorn
+content-length: 186
+content-type: application/json
+x-request-id: 652cf20d-b7d1-48a5-a7e6-6353d1177f68
+
+{"id":"35f1082e-38f9-4c8c-9e94-59330c43619b","cliente":"Maria Silva","descricao":"1x Notebook Dell Inspiron 15","valor":4599.9,"status":"CRIADO","criadoEm":"2026-10-22T00:37:01.740948Z"}
+
+$ curl -i http://localhost:8000/pedidos/pedido-inexistente
+HTTP/1.1 404 Not Found
+date: Thu, 22 Oct 2026 00:37:01 GMT
+server: uvicorn
+content-length: 156
+content-type: application/json
+x-request-id: 8e5bd332-2b98-4224-943a-da549160c654
+
+{"erro":"PEDIDO_NAO_ENCONTRADO","mensagem":"Pedido 'pedido-inexistente' não encontrado","requestId":"8e5bd332-2b98-4224-943a-da549160c654","detalhes":null}
+
+$ curl -i -X POST http://localhost:8000/pedidos -H "Content-Type: application/json" -d '{"descricao":"Pedido sem cliente","valor":-10}'
+HTTP/1.1 422 Unprocessable Content
+date: Thu, 22 Oct 2026 00:37:01 GMT
+server: uvicorn
+content-length: 245
+content-type: application/json
+x-request-id: f691b729-abf0-4187-81cd-3956191c7f2f
+
+{"erro":"REQUISICAO_INVALIDA","mensagem":"Dados de entrada inválidos","requestId":"f691b729-abf0-4187-81cd-3956191c7f2f","detalhes":[{"campo":"cliente","mensagem":"Field required"},{"campo":"valor","mensagem":"Input should be greater than 0"}]}
