@@ -234,23 +234,26 @@ python -m pytest -v
 
 ### Evidência da execução
 
-Saída registrada em [`docs/evidencias/pytest-resultado.txt`](docs/evidencias/pytest-resultado.txt):
+Execução no Windows (Git Bash, Python 3.14), registrada em [`docs/evidencias/pytest-resultado.txt`](docs/evidencias/pytest-resultado.txt):
 
 ```
-============================= test session starts ==============================
-platform linux -- Python 3.13.16, pytest-9.1.1, pluggy-1.7.0 -- /usr/bin/python3
+$ python -m pytest -v
+======================================================== test session starts ========================================================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.7.0 -- C:\Users\labsfiap\Downloads\cp5-soa-api-pedidos\pedidos-api\.venv\Scripts\python.exe
 cachedir: .pytest_cache
-rootdir: /home/claude/pedidos-api
-plugins: platformdirs-4.12.3, anyio-4.15.1
-collecting ... collected 5 items
+rootdir: C:\Users\labsfiap\Downloads\cp5-soa-api-pedidos\pedidos-api
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.15.1
+collected 5 items
 
-tests/test_pedidos.py::test_criar_pedido_retorna_201_com_status_criado PASSED [ 20%]
-tests/test_pedidos.py::test_consultar_pedido_existente_retorna_200 PASSED [ 40%]
-tests/test_pedidos.py::test_consultar_pedido_inexistente_retorna_404 PASSED [ 60%]
-tests/test_pedidos.py::test_criar_pedido_com_valor_invalido_retorna_422 PASSED [ 80%]
-tests/test_pedidos.py::test_criar_pedido_gera_log_estruturado_em_json PASSED [100%]
+tests/test_pedidos.py::test_criar_pedido_retorna_201_com_status_criado PASSED                                                  [ 20%]
+tests/test_pedidos.py::test_consultar_pedido_existente_retorna_200 PASSED                                                      [ 40%]
+tests/test_pedidos.py::test_consultar_pedido_inexistente_retorna_404 PASSED                                                    [ 60%]
+tests/test_pedidos.py::test_criar_pedido_com_valor_invalido_retorna_422 PASSED                                                 [ 80%]
+tests/test_pedidos.py::test_criar_pedido_gera_log_estruturado_em_json PASSED                                                   [100%]
 
-============================== 5 passed in 0.06s ===============================
+========================================================= 5 passed in 0.18s =========================================================
 ```
 
 ## 5. Observabilidade: logs estruturados
